@@ -28,3 +28,5 @@ http://ku.nz/blog/shrinkingc.html
 Use visual studio 2008 linking against msvcrt.dll
 
 Use UPX to compress the binary
+
+End result is 7.5 kB
