@@ -19,7 +19,7 @@ tcc.exe -impdef ws2_32.dll
 tcc.exe fpipe.c ws2_32.def 
 ```
 
-Visual Studio can be used to compile this as well
+Visual Studio 2008 can be used to compile this as well
 
 # Shrinking the file size
 
