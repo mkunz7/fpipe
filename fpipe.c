@@ -5,9 +5,8 @@
 
    Detected compiler: Visual C++
 */
-
 #include <windows.h>
-#include <WinSock.h>
+#include <winsock2.h>
 //#include <defs.h>
 
 
@@ -76,17 +75,17 @@ int dword_404C58 = 0; // weak
 int g_quitSignal = 0; // weak
 HWND g_hWnd = NULL; // idb
 int g_destIP = 0; // weak
-sockaddr g_sockTo = { 0u, "" }; // idb
+struct sockaddr g_sockTo = { 0u, "" }; // idb
 int g_type = 0; // idb
 int g_iFlagIP = 0; // idb
 int g_UDPFlag = 0; // weak
 SOCKET g_sock = 0u; // idb
 u_short g_LFlagPort = 0u; // idb
 char g_sockList[4096]; // weak
-sockaddr g_sockaddr; // idb
+struct sockaddr g_sockaddr; // idb
 DWORD maxConnections; // weak
 u_short g_sFlagSourcePort; // idb
-sockaddr g_sockAddrOut; // idb
+struct sockaddr g_sockAddrOut; // idb
 u_short g_rFlagPort; // idb
 
 
@@ -145,7 +144,7 @@ int main(int argc, const char **argv, const char **envp)
 //----- (004010FE) --------------------------------------------------------
 int Initialization(HINSTANCE hInstance)
 {
-  WSAData wsaData; // [esp+Ch] [ebp-1B8h] BYREF
+  struct WSAData wsaData; // [esp+Ch] [ebp-1B8h] BYREF
   WNDCLASSA WndClass; // [esp+19Ch] [ebp-28h] BYREF
 
   InitializeCriticalSection(&g_csSync);
@@ -770,11 +769,11 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
   CHAR String1[32]; // [esp+82Ch] [ebp-B0h] BYREF
   CHAR v48[32]; // [esp+84Ch] [ebp-90h] BYREF
   CHAR v49[32]; // [esp+86Ch] [ebp-70h] BYREF
-  sockaddr v50; // [esp+88Ch] [ebp-50h] BYREF
-  sockaddr v51; // [esp+89Ch] [ebp-40h] BYREF
-  sockaddr v52; // [esp+8ACh] [ebp-30h] BYREF
-  sockaddr name; // [esp+8BCh] [ebp-20h] BYREF
-  sockaddr from; // [esp+8CCh] [ebp-10h] BYREF
+  struct sockaddr v50; // [esp+88Ch] [ebp-50h] BYREF
+  struct sockaddr v51; // [esp+89Ch] [ebp-40h] BYREF
+  struct sockaddr v52; // [esp+8ACh] [ebp-30h] BYREF
+  struct sockaddr name; // [esp+8BCh] [ebp-20h] BYREF
+  struct sockaddr from; // [esp+8CCh] [ebp-10h] BYREF
   SOCKET *Msga; // [esp+8E8h] [ebp+Ch]
 
   int len = 16;	
@@ -782,7 +781,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
   switch ( Msg )
   {
     case 2u:
-      ::g_hWnd = 0;
+      g_hWnd = 0;
       PostQuitMessage(0);
       return 0;
     case 0xBD0u:
@@ -882,7 +881,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
                     }
                     else
                     {
-                      WSAAsyncSelect(v19, ::g_hWnd, 0xBD0u, 48);
+                      WSAAsyncSelect(v19, g_hWnd, 0xBD0u, 48);
                       v37 = ntohs(*(u_short *)from.sa_data);
                       v20 = inet_ntoa(*(struct in_addr *)&from.sa_data[2]);
                       DebugPrint1("Attempting to connect to %s port %d\n", v20, v37);
@@ -966,8 +965,8 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
                 v27,
                 v49,
                 v34);
-              WSAAsyncSelect(*v10, ::g_hWnd, 0xBD0u, 33);
-              WSAAsyncSelect(v10[1], ::g_hWnd, 0xBD0u, 33);
+              WSAAsyncSelect(*v10, g_hWnd, 0xBD0u, 33);
+              WSAAsyncSelect(v10[1], g_hWnd, 0xBD0u, 33);
             }
           }
           return 0;
@@ -1014,7 +1013,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
             {
               *(struct sockaddr *)(v6 + 2) = from;
               v30 = ntohs(*((WORD *)v6 + 5));
-              v7 = inet_ntoa(*((in_addr*)&v6[3]));
+              v7 = inet_ntoa(*((struct in_addr*)&v6[3]));
               DebugPrint1("Setting last UDP source address to %s port %d\n", v7, v30);
             }
             if ( sendto(v6[1], buf, v5, 0, &g_sockTo, 16) != -1 )
